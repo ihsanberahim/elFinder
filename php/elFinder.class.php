@@ -3549,6 +3549,13 @@ class elFinder {
 		if (($volume = $this->volume($target)) != false) {
 			if (! $volume->commandDisabled('url')) {
 				$url = $volume->getContentUrl($target, $options);
+
+				foreach(config('elfinder.disks') as $diskName) {
+                   			$diskUrl = Storage::disk($diskName)->url('');
+                    			$path = str_replace($diskUrl, '', $url);
+                    			Storage::disk($diskName)->setVisibility($path, 'public');
+                		}
+				
 				return $url ? array('url' => $url) : array();
 			}
 		}
